@@ -1,13 +1,26 @@
 # app/__init__.py
-from flask import Flask # This line already exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except:
+    pass
 
-from .db import tweet_repository
-from .models import Tweet
-tweet_repository.add(Tweet("a first tweet"))
-tweet_repository.add(Tweet("a second tweet"))
+from flask import Flask
+from config import Config
+
+#from .db import tweet_repository
+#from .models import Tweet
+#tweet_repository.add(Tweet("a first tweet"))
+#tweet_repository.add(Tweet("a second tweet"))
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object(Config)
+
+    from flask_sqlalchemy import SQLAlchemy
+    db = SQLAlchemy(app)
+
+    from .models import Tweet
 
     # Remove the previous code using `@app` and replace it with:
     from .main.controllers import main
